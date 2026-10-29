@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUXEVOYAGE - Luxury Travel Destination</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,800;1,400&family=Poiret+One&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Font Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            800: '#115e59',
+                            900: '#134e4a',
+                            dark: '#121824',
+                            accent: '#38bdf8'
+                        }
+                    },
+                    fontFamily: {
+                        poiret: ['"Poiret One"', 'cursive'],
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* 기본 리셋 및 글로벌 스타일 */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0f172a; color: #334155; overflow-x: hidden; }
+
+        /* Keyframes for initial loading scaling animation */
+        @keyframes scaleUp {
+            0% { opacity: 0; transform: scale(0.92); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .animate-scale {
+            animation: scaleUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* 스크롤바 커스텀 */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #0d9488; }
+
+        /* 전통적인 호버 비주얼 변형 효과 구현 */
+        .card-bg-zoom {
+            transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .card-item:hover .card-bg-zoom {
+            transform: scale(1.08);
+        }
+
+        /* 텍스트 및 아이콘 호버 애니메이션 */
+        .hover-icon-effect {
+            transition: all 0.6s ease;
+            opacity: 0;
+            transform: translate(30px, 30px) scale(0.5);
+        }
+        .card-item:hover .hover-icon-effect {
+            opacity: 0.15;
+            transform: translate(0, 0) scale(1);
+        }
+
+        /* 마퀴 marquee 효과 */
+        .marquee-container {
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 25s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* ============================================================
+           화면 폭에 따른 미디어쿼리 (요구사항 브레이크포인트 반영)
+           ============================================================ */
+
+        /* 1. 기본 스타일: 1600px 이상 (데스크톱 최적화) */
+        header.main-header {
+            position: fixed;
+            width: 16%;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            background: #ffffff;
+            z-index: 40;
+            transition: all 0.5s ease;
+            box-shadow: 4px 0 25px rgba(0,0,0,0.05);
+        }
+        nav.top-nav {
+            position: relative;
+            width: 84%;
+            margin-left: 16%;
+            height: 48px;
+            background: #1e293b;
+            transition: all 0.5s ease;
+            z-index: 30;
+        }
+        section.main-section {
+            width: 84%;
+            margin-left: 16%;
+            position: relative;
+            min-height: calc(100vh - 48px);
+        }
+
+        /* Grid Item Custom Widths for Desktop (> 1600px) */
+        .grid-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .art-1 { width: 60%; height: 520px; }
+        .art-2 { width: 40%; height: 260px; }
+        .art-3 { width: 20%; height: 260px; }
+        .art-4 { width: 20%; height: 260px; }
+        .art-5 { width: 20%; height: 260px; }
+        .art-6 { width: 40%; height: 260px; }
+        .art-7 { width: 20%; height: 260px; }
+        .art-8 { width: 20%; height: 260px; }
+        .art-9 { width: 40%; height: 260px; }
+        .art-10 { width: 20%; height: 260px; }
+        .art-11 { width: 20%; height: 260px; }
+        .art-12 { width: 20%; height: 260px; }
+
+        /* 2. 1280px ~ 1599px */
+        @media screen and (min-width: 1280px) and (max-width: 1599px) {
+            header.main-header {
+                position: relative;
+                width: 100%;
+                height: 80px;
+                box-shadow: none;
+            }
+            nav.top-nav { width: 100%; margin-left: 0; }
+            section.main-section { width: 100%; margin-left: 0; }
+            .header-content { flex-direction: row !important; justify-content: space-between; align-items: center; padding: 0 2rem !important; }
+            .header-logo { margin: 0 !important; top: auto !important; position: relative !important; }
+            .gnb-menu { position: relative !important; top: auto !important; right: auto !important; display: flex !important; flex-direction: row !important; gap: 1rem; }
+            .sns-set { position: relative !important; bottom: auto !important; right: auto !important; margin: 0 !important; }
+        }
+
+        /* 3. 1024px ~ 1279px */
+        @media screen and (min-width: 1024px) and (max-width: 1279px) {
+            header.main-header { position: relative; width: 100%; height: 80px; }
+            nav.top-nav { width: 100%; margin-left: 0; }
+            section.main-section { width: 100%; margin-left: 0; }
+            .header-content { flex-direction: row !important; justify-content: space-between; align-items: center; padding: 0 1.5rem !important; }
+            .header-logo { margin: 0 !important; position: relative !important; }
+            .gnb-menu { position: relative !important; top: auto !important; display: flex !important; flex-direction: row !important; }
+            .sns-set { display: none !important; }
+
+            .art-1 { width: 75%; height: 500px; }
+            .art-2 { width: 25%; height: 250px; }
+            .art-3 { width: 25%; height: 250px; }
+            .art-4 { width: 25%; height: 250px; }
+            .art-5 { width: 25%; height: 250px; }
+            .art-6 { width: 50%; height: 250px; }
+            .art-7 { width: 50%; height: 250px; }
+            .art-8 { width: 25%; height: 250px; }
+            .art-9 { width: 25%; height: 250px; }
+            .art-10 { width: 50%; height: 250px; }
+            .art-11 { width: 25%; height: 250px; }
+            .art-12 { width: 25%; height: 250px; }
+        }
+
+        /* 4. 780px ~ 1023px */
+        @media screen and (min-width: 780px) and (max-width: 1023px) {
+            header.main-header { position: relative; width: 100%; height: 80px; }
+            nav.top-nav { width: 100%; margin-left: 0; }
+            section.main-section { width: 100%; margin-left: 0; }
+            .header-content { flex-direction: row !important; justify-content: space-between; align-items: center; padding: 0 1rem !important; }
+            .sns-set { display: none !important; }
+
+            .art-1 { width: 100%; height: 400px; }
+            .art-2 { width: 66.666%; height: 240px; }
+            .art-3 { width: 33.333%; height: 240px; }
+            .art-4 { display: none; }
+            .art-5 { width: 33.333%; height: 240px; }
+            .art-6 { width: 66.666%; height: 240px; }
+            .art-7 { display: none; }
+            .art-8 { width: 33.333%; height: 240px; }
+            .art-9 { width: 33.333%; height: 240px; }
+            .art-10 { display: none; }
+            .art-11 { width: 33.333%; height: 240px; }
+            .art-12 { display: none; }
+        }
+
+        /* 5. 640px ~ 779px */
+        @media screen and (min-width: 640px) and (max-width: 779px) {
+            header.main-header { position: relative; width: 100%; height: 80px; }
+            nav.top-nav { width: 100%; margin-left: 0; }
+            section.main-section { width: 100%; margin-left: 0; }
+            .sns-set { display: none !important; }
+
+            .art-1 { width: 100%; height: 380px; }
+            .art-2 { width: 100%; height: 240px; }
+            .art-3 { display: none; }
+            .art-4 { display: none; }
+            .art-5 { width: 50%; height: 220px; }
+            .art-6 { width: 50%; height: 220px; }
+            .art-7 { display: none; }
+            .art-8 { width: 50%; height: 220px; }
+            .art-9 { width: 50%; height: 220px; }
+            .art-10 { display: none; }
+            .art-11 { width: 50%; height: 220px; }
+            .art-12 { width: 50%; height: 220px; }
+        }
+
+        /* 6. 480px ~ 639px */
+        @media screen and (min-width: 480px) and (max-width: 639px) {
+            header.main-header { position: relative; width: 100%; height: 120px; }
+            nav.top-nav { display: none; }
+            section.main-section { width: 100%; margin-left: 0; }
+            .sns-set { display: none !important; }
+
+            .art-1 { width: 100%; height: 300px; }
+            .art-2 { width: 100%; height: 200px; }
+            .art-3 { display: none; }
+            .art-4 { display: none; }
+            .art-5 { width: 50%; height: 180px; }
+            .art-6 { width: 50%; height: 180px; }
+            .art-7 { display: none; }
+            .art-8 { width: 50%; height: 180px; }
+            .art-9 { width: 50%; height: 180px; }
+            .art-10 { display: none; }
+            .art-11 { width: 50%; height: 180px; }
+            .art-12 { width: 50%; height: 180px; }
+        }
+
+        /* 7. 479px 이하 (모바일 최적화) */
+        @media screen and (max-width: 479px) {
+            header.main-header {
+                position: fixed;
+                width: 100%;
+                height: 60px;
+                background: rgba(15, 23, 42, 0.9);
+                backdrop-filter: blur(10px);
+                z-index: 50;
+            }
+            nav.top-nav { display: none; }
+            section.main-section { width: 100%; margin-left: 0; }
+            
+            .header-content { flex-direction: row !important; justify-content: space-between; align-items: center; padding: 0 1rem !important; height: 100%; }
+            .header-logo { margin: 0 !important; }
+            .header-logo img { height: 32px; width: auto; }
+            .gnb-menu { display: none !important; } /* Mobile drawer handles this */
+            .sns-set { display: none !important; }
+
+            .grid-container article { display: none; }
+            .art-1 { display: block !important; width: 100% !important; height: 100vh !important; }
+            .art-1 .hero-title { font-size: 3rem !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- HEADER (Left fixed sidebar on wide screens) -->
+    <header class="main-header border-r border-slate-200/20">
+        <div class="header-content h-full flex flex-col justify-between py-8 px-6 relative">
+            
+            <!-- Logo Section -->
+            <div class="header-logo text-center my-2">
+                <a href="#" class="inline-block group">
+                    <div class="w-16 h-16 mx-auto mb-3 bg-brand-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-brand-600/30 group-hover:scale-105 transition-transform">
+                        <i class="fa-solid fa-compass text-3xl fa-spin-pulse" style="--fa-animation-duration: 12s;"></i>
+                    </div>
+                    <span class="font-serif text-xl tracking-wider font-bold block text-slate-800">LUXEVOYAGE</span>
+                    <span class="text-[10px] tracking-widest text-slate-400 uppercase font-semibold">Luxury Travel & Resorts</span>
+                </a>
+            </div>
+
+            <!-- Global Navigation Bar (GNB) -->
+            <nav class="gnb-menu my-auto">
+                <ul class="space-y-3 font-medium text-slate-600">
+                    <li>
+                        <a href="#destinations" class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-slate-100 hover:text-brand-600 transition-all text-sm font-semibold group">
+                            <i class="fa-solid fa-earth-americas text-brand-500 group-hover:rotate-12 transition-transform"></i>
+                            <span>Destinations</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#resorts" class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-slate-100 hover:text-brand-600 transition-all text-sm font-semibold group">
+                            <i class="fa-solid fa-hotel text-brand-500 group-hover:scale-110 transition-transform"></i>
+                            <span>Resorts & Spa</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#activities" class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-slate-100 hover:text-brand-600 transition-all text-sm font-semibold group">
+                            <i class="fa-solid fa-person-swimming text-brand-500 group-hover:translate-x-1 transition-transform"></i>
+                            <span>Experiences</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#about" class="flex items-center gap-3 px-4 py-2.5 rounded-xl hover:bg-slate-100 hover:text-brand-600 transition-all text-sm font-semibold group">
+                            <i class="fa-solid fa-circle-info text-brand-500 group-hover:rotate-45 transition-transform"></i>
+                            <span>About Us</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Social Links & Footer -->
+            <div class="sns-set text-center">
+                <div class="flex items-center justify-center gap-3 mb-4 text-slate-400">
+                    <a href="#" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-brand-500 hover:text-white transition-all text-xs">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+                    <a href="#" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-brand-500 hover:text-white transition-all text-xs">
+                        <i class="fa-brands fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-brand-500 hover:text-white transition-all text-xs">
+                        <i class="fa-brands fa-youtube"></i>
+                    </a>
+                </div>
+                <p class="text-[11px] text-slate-400">&copy; 2026 LUXEVOYAGE Inc.</p>
+            </div>
+
+            <!-- Mobile Menu Toggle Button (Visible on mobile screens) -->
+            <button id="mobileMenuBtn" class="md:hidden text-slate-200 text-xl p-2 focus:outline-none">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- TOP MINI NAVIGATION BAR -->
+    <nav class="top-nav text-xs text-slate-300 flex items-center justify-between px-6 border-b border-slate-800">
+        <!-- Left Marquee Announcement -->
+        <div class="marquee-container w-1/2 flex items-center gap-2 text-slate-400">
+            <span class="bg-brand-600/30 text-brand-300 text-[10px] uppercase tracking-wider px-2 py-0.5 rounded font-bold">Notice</span>
+            <div class="marquee-content font-poiret text-slate-200 text-sm">
+                <span>Welcome to LUXEVOYAGE ~ Premium Customized Travel Guide &amp; Booking Platform *^^* Exclusive Summer Discounts Available Now!</span>
+            </div>
+        </div>
+
+        <!-- Right Quick Actions -->
+        <div class="flex items-center gap-6 font-medium">
+            <button onclick="openSearchModal()" class="hover:text-brand-400 transition-colors flex items-center gap-1.5">
+                <i class="fa-solid fa-magnifying-glass text-slate-400"></i>
+                <span class="hidden sm:inline">Search Spots</span>
+            </button>
+            <div class="h-3 w-[1px] bg-slate-700"></div>
+            <div class="relative group cursor-pointer hover:text-brand-400 transition-colors">
+                <i class="fa-solid fa-globe mr-1"></i> English
+                <div class="absolute right-0 top-full hidden group-hover:block bg-slate-800 text-slate-200 py-2 w-28 rounded-lg shadow-xl text-xs border border-slate-700 mt-1">
+                    <a href="#" class="block px-3 py-1.5 hover:bg-slate-700">Korean (한국어)</a>
+                    <a href="#" class="block px-3 py-1.5 hover:bg-slate-700">English</a>
+                    <a href="#" class="block px-3 py-1.5 hover:bg-slate-700">Japanese (日本語)</a>
+                </div>
+            </div>
+            <div class="h-3 w-[1px] bg-slate-700"></div>
+            <a href="#" onclick="showBookmarkToast(event)" class="hover:text-brand-400 transition-colors flex items-center gap-1">
+                <i class="fa-regular fa-bookmark"></i>
+                <span class="hidden sm:inline">Saved</span>
+            </a>
+            <button onclick="openBookingModal('General Destination Inquiry')" class="bg-brand-600 hover:bg-brand-500 text-white px-3 py-1 rounded-md text-xs font-semibold transition-all shadow-md">
+                Reserve
+            </button>
+        </div>
+    </nav>
+
+    <!-- MAIN GRID SECTION -->
+    <section class="main-section p-2 sm:p-3 lg:p-4 bg-slate-950">
+
+        <!-- Category Filter Tabs -->
+        <div class="flex items-center justify-between mb-3 px-2">
+            <div class="flex items-center gap-2 overflow-x-auto py-1">
+                <button onclick="filterCategory('all')" class="filter-btn active bg-brand-600 text-white text-xs px-3.5 py-1.5 rounded-full font-medium transition-all shadow-sm">All Highlights</button>
+                <button onclick="filterCategory('beach')" class="filter-btn bg-slate-800/80 hover:bg-slate-800 text-slate-300 text-xs px-3.5 py-1.5 rounded-full font-medium transition-all">Beach &amp; Islands</button>
+                <button onclick="filterCategory('nature')" class="filter-btn bg-slate-800/80 hover:bg-slate-800 text-slate-300 text-xs px-3.5 py-1.5 rounded-full font-medium transition-all">Alpine &amp; Nature</button>
+                <button onclick="filterCategory('culture')" class="filter-btn bg-slate-800/80 hover:bg-slate-800 text-slate-300 text-xs px-3.5 py-1.5 rounded-full font-medium transition-all">Culture &amp; City</button>
+            </div>
+            <span class="text-xs text-slate-400 hidden md:block"><i class="fa-solid fa-arrow-pointer mr-1"></i>Click cards to explore details</span>
+        </div>
+
+        <!-- 12 ARTICLED GRID LAYOUT -->
+        <div class="grid-container gap-2 sm:gap-3">
+
+            <!-- Block 1: Main Featured Hero Card (Maldives) -->
+            <article class="art-1 card-item relative rounded-2xl overflow-hidden group cursor-pointer animate-scale" data-category="beach" onclick="openDetailModal(1)">
+                <div class="absolute inset-0 bg-cover bg-center card-bg-zoom" style="background-image: url('https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=1600&q=80');"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent opacity-80 group-hover:opacity-70 transition-opacity"></div>
+                <div class="relative h-full flex flex-col justify-between p-6 sm:p-10 z-10">
+                    <div class="flex items-center justify-between">
+                        <span class="bg-brand-500/90 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider backdrop-blur-sm">Featured Spotlight</span>
+                        <div class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white group-hover:bg-brand-500 transition-colors">
+                            <i class="fa-solid fa-arrow-up-right-from-square text-sm"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-brand-300 text-sm font-semibold tracking-widest uppercase mb-1 block">Tropical Paradise</span>
+                        <h2 class="hero-title font-poiret text-5xl sm:text-7xl font-bold text-white tracking-wider mb-2 leading-none">MALDIVES</h2>
+                        <p class="text-slate-200 text-sm sm:text-base max-w-xl font-light line-clamp-2">
+                            Crystal clear turquoise lagoons, overwater bungalows, and pristine white sand beaches await your ultimate tropical luxury escape.
+                        </p>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Block 2: Text Card - A Whole New World -->
+            <article class="art-2 card-item relative rounded-2xl overflow-hidden bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-800 p-6 flex flex-col justify-between group cursor-pointer animate-scale" data-category="culture" onclick="openDetailModal(2)">
+                <i class="fa-solid fa-plane-departure hover-icon-effect absolute text-slate-700"></i>
+                <div class="relative z-10">
+                    <div class="text-xs font-semibold text-brand-400 uppercase tracking-widest mb-1">Inspiration</div>
+                    <h3 class="font-serif text-2xl font-bold text-white group-hover:text-brand-300 transition-colors mb-2">A Whole New World</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        I can show you the world. Shining, shimmering, splendid. Uncover breathtaking destinations crafted for unforgettable memories.
+                    </p>
+                </div>
+                <div class="relative z-10 flex items-center justify-between mt-4">
+                    <span class="text-xs font-semibold text-slate-300 group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+                        Discover Stories <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </span>
+                    <i class="fa-solid fa-compass-drafting text-brand-500/40 text-xl"></i>
+                </div>
+            </article>
+
+            <!-- Block 3: Accent Color Reservation Block -->
+            <article class="art-3 card-item relative rounded-2xl overflow-hidden bg-brand-500 p-6 flex flex-col justify-between group cursor-pointer text-white animate-scale" data-category="all" onclick="openBookingModal('Reservation Service')">
+                <div class="absolute -right-4 -bottom-4 opacity-20 text-white">
+                    <i class="fa-solid fa-calendar-check text-9xl"></i>
+                </div>
+                <div>
+                    <span class="text-[10px] uppercase font-bold tracking-widest bg-white/20 px-2 py-0.5 rounded">Fast Track</span>
+                    <h3 class="font-serif text-2xl font-bold mt-2 mb-1">Reservation</h3>
+                    <p class="text-xs text-white/80">Tailored luxury bookings with 24/7 dedicated concierge.</p>
+                </div>
+                <div class="flex items-center gap-2 font-bold text-xs bg-white text-brand-800 px-3 py-2 rounded-xl w-fit group-hover:bg-slate-900 group-hover:text-white transition-colors">
+                    <span>Book Now</span>
+                    <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                </div>
+            </article>
+
+            <!-- Block 4: Image Card - Santorini -->
+            <article class="art-4 card-item relative rounded-2xl overflow-hidden group cursor-pointer animate-scale" data-category="culture" onclick="openDetailModal(4)">
+                <div class="absolute inset-0 bg-cover bg-center card-bg-zoom" style="background-image: url('https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="absolute inset-0 bg-slate-950/40 group-hover:bg-slate-950/20 transition-colors"></div>
+                <div class="relative h-full p-5 flex flex-col justify-between z-10 text-white">
+                    <span class="text-[10px] bg-slate-900/80 px-2 py-1 rounded w-fit">Greece</span>
+                    <div>
+                        <h4 class="font-serif text-xl font-bold">Santorini Sunset</h4>
+                        <p class="text-xs text-slate-200 opacity-0 group-hover:opacity-100 transition-opacity">Iconic white-washed villas overlooking the deep blue Aegean sea.</p>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Block 5: Image Card - Surfing Adventure -->
+            <article class="art-5 card-item relative rounded-2xl overflow-hidden group cursor-pointer animate-scale" data-category="beach" onclick="openDetailModal(5)">
+                <div class="absolute inset-0 bg-cover bg-center card-bg-zoom" style="background-image: url('https://images.unsplash.com/photo-1502680390469-be75c86b636f?auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="absolute inset-0 bg-slate-950/30 group-hover:bg-slate-950/10 transition-colors"></div>
+                <div class="relative h-full p-5 flex flex-col justify-between z-10 text-white">
+                    <span class="text-[10px] bg-brand-600/80 px-2 py-1 rounded w-fit">Activity</span>
+                    <div>
+                        <h4 class="font-serif text-xl font-bold">Ocean Surfing</h4>
+                        <p class="text-xs text-slate-200">Ride the golden waves in world-class reef breaks.</p>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Block 6: Text Card - A Dazzling Place -->
+            <article class="art-6 card-item relative rounded-2xl overflow-hidden bg-slate-900 border border-slate-800 p-6 flex flex-col justify-between group cursor-pointer animate-scale" data-category="nature" onclick="openDetailModal(6)">
+                <i class="fa-solid fa-water hover-icon-effect absolute text-slate-700"></i>
+                <div class="relative z-10">
+                    <span class="text-xs font-semibold text-brand-400 uppercase tracking-widest">Experience</span>
+                    <h3 class="font-serif text-2xl font-bold text-white group-hover:text-brand-300 transition-colors my-1">A Dazzling Place</h3>
+                    <p class="text-xs text-slate-400">
+                        Immerse yourself in tranquil waters and vibrant coral reefs with exclusive private yacht expeditions.
+                    </p>
+                </div>
+                <div class="relative z-10 flex items-center justify-between text-xs text-brand-400 font-semibold">
+                    <span>Explore Lagoon Tour</span>
+                    <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
+                </div>
+            </article>
+
+            <!-- Block 7: Image Card - Swiss Alps -->
+            <article class="art-7 card-item relative rounded-2xl overflow-hidden group cursor-pointer animate-scale" data-category="nature" onclick="openDetailModal(7)">
+                <div class="absolute inset-0 bg-cover bg-center card-bg-zoom" style="background-image: url('https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="absolute inset-0 bg-slate-950/30 group-hover:bg-slate-950/10 transition-colors"></div>
+                <div class="relative h-full p-5 flex flex-col justify-between z-10 text-white">
+                    <span class="text-[10px] bg-slate-900/80 px-2 py-1 rounded w-fit">Switzerland</span>
+                    <div>
+                        <h4 class="font-serif text-xl font-bold">Swiss Alps</h4>
+                        <p class="text-xs text-slate-200">Majestic mountain peaks & luxury ski chalets.</p>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Block 8: Image Card - Kyoto Japan -->
+            <article class="art-8 card-item relative rounded-2xl overflow-hidden group cursor-pointer animate-scale" data-category="culture" onclick="openDetailModal(8)">
+                <div class="absolute inset-0 bg-cover bg-center card-bg-zoom" style="background-image: url('https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="absolute inset-0 bg-slate-950/40 group-hover:bg-slate-950/20 transition-colors"></div>
+                <div class="relative h-full p-5 flex flex-col justify-between z-10 text-white">
+                    <span class="text-[10px] bg-slate-900/80 px-2 py-1 rounded w-fit">Japan</span>
+                    <div>
+                        <h4 class="font-serif text-xl font-bold">Kyoto Temples</h4>
+                        <p class="text-xs text-slate-200">Serene bamboo groves and historic wooden shrines.</p>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Block 9: Text Card - Hot Spot Highlight -->
+            <article class="art-9 card-item relative rounded-2xl overflow-hidden bg-gradient-to-r from-brand-900 to-slate-900 border border-brand-800/40 p-6 flex flex-col justify-between group cursor-pointer animate-scale" data-category="nature" onclick="openDetailModal(9)">
+                <i class="fa-solid fa-umbrella-beach hover-icon-effect absolute text-brand-800"></i>
+                <div class="relative z-10">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="fa-solid fa-fire text-amber-400 text-sm"></i>
+                        <span class="text-xs font-semibold text-amber-300 uppercase tracking-widest">Trending Destination</span>
+                    </div>
+                    <h3 class="font-serif text-2xl font-bold text-white mb-2">Hot Spots &amp; Villas</h3>
+                    <p class="text-xs text-slate-300">
+                        A best place to have a dream vacation. Hand-picked overwater villas offering supreme privacy.
+                    </p>
+                </div>
+                <div class="relative z-10 flex items-center justify-between text-xs text-slate-300 font-medium">
+                    <span>View Top 10 Resorts</span>
+                    <i class="fa-solid fa-circle-arrow-right text-brand-400 text-lg group-hover:scale-110 transition-transform"></i>
+                </div>
+            </article>
+
+            <!-- Block 10: Image Card - Bora Bora -->
+            <article class="art-10 card-item relative rounded-2xl overflow-hidden group cursor-pointer animate-scale" data-category="beach" onclick="openDetailModal(10)">
+                <div class="absolute inset-0 bg-cover bg-center card-bg-zoom" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="absolute inset-0 bg-slate-950/30 group-hover:bg-slate-950/10 transition-colors"></div>
+                <div class="relative h-full p-5 flex flex-col justify-between z-10 text-white">
+                    <span class="text-[10px] bg-slate-900/80 px-2 py-1 rounded w-fit">French Polynesia</span>
+                    <div>
+                        <h4 class="font-serif text-xl font-bold">Bora Bora Island</h4>
+                        <p class="text-xs text-slate-200">Turquoise ocean water and volcano backdrop.</p>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Block 11: Text Light Card - Culinary & Wellness -->
+            <article class="art-11 card-item relative rounded-2xl overflow-hidden bg-slate-800/80 border border-slate-700/60 p-6 flex flex-col justify-between group cursor-pointer animate-scale" data-category="culture" onclick="openDetailModal(11)">
+                <i class="fa-solid fa-spa hover-icon-effect absolute text-slate-600"></i>
+                <div class="relative z-10">
+                    <span class="text-xs font-semibold text-brand-400 uppercase tracking-widest">Wellness &amp; Dining</span>
+                    <h3 class="font-serif text-xl font-bold text-white mt-1 mb-2">Michelin Dining</h3>
+                    <p class="text-xs text-slate-400">Exquisite culinary delights by international master chefs.</p>
+                </div>
+                <span class="relative z-10 text-xs font-semibold text-slate-300 group-hover:text-brand-300">Read Review &rarr;</span>
+            </article>
+
+            <!-- Block 12: Image Card - Amalfi Coast -->
+            <article class="art-12 card-item relative rounded-2xl overflow-hidden group cursor-pointer animate-scale" data-category="culture" onclick="openDetailModal(12)">
+                <div class="absolute inset-0 bg-cover bg-center card-bg-zoom" style="background-image: url('https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=800&q=80');"></div>
+                <div class="absolute inset-0 bg-slate-950/40 group-hover:bg-slate-950/20 transition-colors"></div>
+                <div class="relative h-full p-5 flex flex-col justify-between z-10 text-white">
+                    <span class="text-[10px] bg-slate-900/80 px-2 py-1 rounded w-fit">Italy</span>
+                    <div>
+                        <h4 class="font-serif text-xl font-bold">Amalfi Coast</h4>
+                        <p class="text-xs text-slate-200">Dramatic cliffside villages and Mediterranean charm.</p>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- DETAILED DESTINATION MODAL -->
+    <div id="detailModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-slate-900 border border-slate-800 text-slate-100 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative">
+            <button onclick="closeDetailModal()" class="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 flex items-center justify-center transition-colors">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <div id="modalImage" class="h-64 sm:h-80 w-full bg-cover bg-center relative">
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
+                <div class="absolute bottom-4 left-6">
+                    <span id="modalBadge" class="bg-brand-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase">Destination</span>
+                    <h2 id="modalTitle" class="font-serif text-3xl sm:text-4xl font-bold text-white mt-2">Title Here</h2>
+                </div>
+            </div>
+            <div class="p-6 sm:p-8 space-y-6">
+                <div>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-brand-400 mb-2">Overview</h3>
+                    <p id="modalDescription" class="text-slate-300 text-sm leading-relaxed">Detailed info about the travel spot goes here...</p>
+                </div>
+
+                <div class="grid grid-cols-3 gap-4 py-4 border-y border-slate-800 text-center">
+                    <div>
+                        <i class="fa-solid fa-sun text-amber-400 text-lg mb-1 block"></i>
+                        <span class="text-[10px] text-slate-400 uppercase">Best Season</span>
+                        <p id="modalSeason" class="text-xs font-bold text-slate-200">Nov - Apr</p>
+                    </div>
+                    <div>
+                        <i class="fa-solid fa-plane text-brand-400 text-lg mb-1 block"></i>
+                        <span class="text-[10px] text-slate-400 uppercase">Flight Time</span>
+                        <p id="modalFlight" class="text-xs font-bold text-slate-200">11h 30m Direct</p>
+                    </div>
+                    <div>
+                        <i class="fa-solid fa-star text-amber-400 text-lg mb-1 block"></i>
+                        <span class="text-[10px] text-slate-400 uppercase">Rating</span>
+                        <p id="modalRating" class="text-xs font-bold text-slate-200">4.9 / 5.0</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-2">
+                    <div>
+                        <span class="text-[11px] text-slate-400 block">Starting Package</span>
+                        <span id="modalPrice" class="text-2xl font-bold text-white">$2,450 <span class="text-xs text-slate-400 font-normal">/ person</span></span>
+                    </div>
+                    <button id="modalBookBtn" class="bg-brand-600 hover:bg-brand-500 text-white font-semibold px-6 py-3 rounded-xl transition-colors shadow-lg shadow-brand-600/30 flex items-center gap-2">
+                        <span>Book Package</span>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOOKING / INQUIRY MODAL -->
+    <div id="bookingModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-slate-900 border border-slate-800 text-slate-100 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative">
+            <button onclick="closeBookingModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 flex items-center justify-center transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="mb-6">
+                <span class="text-brand-400 text-xs font-bold uppercase tracking-wider">Luxury Travel Concierge</span>
+                <h3 id="bookingModalTitle" class="font-serif text-2xl font-bold text-white mt-1">Reserve Your Experience</h3>
+                <p class="text-xs text-slate-400 mt-1">Fill in the details below and our personal travel manager will contact you within 2 hours.</p>
+            </div>
+            <form onsubmit="handleBookingSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs text-slate-300 font-semibold mb-1">Your Full Name</label>
+                    <input type="text" required placeholder="John Doe" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-brand-500">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-300 font-semibold mb-1">Email Address</label>
+                    <input type="email" required placeholder="john@example.com" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-brand-500">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs text-slate-300 font-semibold mb-1">Travel Date</label>
+                        <input type="date" required class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-300 font-semibold mb-1">Guests</label>
+                        <select class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500">
+                            <option>1 Traveler</option>
+                            <option selected>2 Travelers</option>
+                            <option>3-4 Travelers</option>
+                            <option>5+ Family / Group</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-300 font-semibold mb-1">Special Requests</label>
+                    <textarea rows="2" placeholder="Dietary restrictions, anniversary surprise..." class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-brand-500"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-brand-600 hover:bg-brand-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg shadow-brand-600/30 text-xs">
+                    Send Booking Request
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- SEARCH MODAL -->
+    <div id="searchModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-start justify-center pt-20 p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-xl w-full p-4 shadow-2xl">
+            <div class="flex items-center gap-3 border-b border-slate-800 pb-3">
+                <i class="fa-solid fa-magnifying-glass text-brand-400"></i>
+                <input type="text" id="searchInput" onkeyup="handleSearch()" placeholder="Search destinations (e.g., Maldives, Alps, Bali)..." class="w-full bg-transparent text-sm text-white focus:outline-none">
+                <button onclick="closeSearchModal()" class="text-xs text-slate-400 hover:text-white">Esc</button>
+            </div>
+            <div id="searchResults" class="mt-4 max-h-60 overflow-y-auto space-y-2">
+                <!-- Dynamic search results populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION MESSAGE BOX -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-slate-800 border border-slate-700 text-white text-xs px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 transform translate-y-20 opacity-0 transition-all duration-300 z-50">
+        <i id="toastIcon" class="fa-solid fa-circle-check text-brand-400 text-base"></i>
+        <span id="toastMsg">Action successfully completed.</span>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Destination Data Repository
+        const destinationData = {
+            1: {
+                title: "Maldives Luxury Overwater Villas",
+                badge: "Tropical Paradise",
+                category: "beach",
+                image: "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=1200&q=80",
+                description: "Escape to an idyllic paradise featuring signature glass-floor overwater bungalows, vibrant living coral reefs, and personalized butler services under infinite ocean views.",
+                season: "Nov - Apr",
+                flight: "11h Direct",
+                rating: "4.9 / 5.0",
+                price: "$3,200"
+            },
+            2: {
+                title: "A Whole New World - Global Expeditions",
+                badge: "Inspiration",
+                category: "culture",
+                image: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1200&q=80",
+                description: "Discover off-the-beaten-path destinations carefully curated by expert travel advisors. Customized itineraries to inspire wonder and create lifelong memories.",
+                season: "All Year",
+                flight: "Varies",
+                rating: "4.8 / 5.0",
+                price: "$1,800"
+            },
+            4: {
+                title: "Santorini Cliffside Caldera",
+                badge: "Greece Island",
+                category: "culture",
+                image: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=1200&q=80",
+                description: "Perched high above the Aegean Sea, witness the world's most famous sunsets amidst pristine white Cycladic architecture and rich Mediterranean heritage.",
+                season: "May - Oct",
+                flight: "13h 20m",
+                rating: "4.9 / 5.0",
+                price: "$2,650"
+            },
+            5: {
+                title: "World-Class Surfing in Fiji & Bali",
+                badge: "Ocean Adventure",
+                category: "beach",
+                image: "https://images.unsplash.com/photo-1502680390469-be75c86b636f?auto=format&fit=crop&w=1200&q=80",
+                description: "Experience thrill on iconic waves with private surf instructors, luxury beachfront camps, and post-surf holistic spa treatments.",
+                season: "Apr - Oct",
+                flight: "9h 45m",
+                rating: "4.7 / 5.0",
+                price: "$1,950"
+            },
+            6: {
+                title: "Private Lagoon & Yacht Charter",
+                badge: "Cruising",
+                category: "nature",
+                image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1200&q=80",
+                description: "Sail through untouched turquoise bays aboard a private catamaran complete with a private chef, scuba gear, and customized island hopping itineraries.",
+                season: "Dec - May",
+                flight: "10h 15m",
+                rating: "5.0 / 5.0",
+                price: "$4,500"
+            },
+            7: {
+                title: "Swiss Alps Luxury Ski Retreat",
+                badge: "Switzerland",
+                category: "nature",
+                image: "https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?auto=format&fit=crop&w=1200&q=80",
+                description: "Snow-covered peaks, world-class ski slopes, and cozy fireside chalets paired with gourmet fondue and Swiss wellness spas.",
+                season: "Dec - Mar",
+                flight: "12h 10m",
+                rating: "4.9 / 5.0",
+                price: "$3,800"
+            },
+            8: {
+                title: "Kyoto Heritage & Arashiyama",
+                badge: "Japan Culture",
+                category: "culture",
+                image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1200&q=80",
+                description: "Step into centuries of tradition with private tea ceremony access, ancient bamboo forest walks, and stays at luxury traditional Ryokans.",
+                season: "Mar - May / Oct - Nov",
+                flight: "2h 30m",
+                rating: "4.8 / 5.0",
+                price: "$1,600"
+            },
+            9: {
+                title: "Overwater Bungalow Hot Spots",
+                badge: "Luxury Resorts",
+                category: "nature",
+                image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80",
+                description: "Handpicked selection of the top 10 most exclusive tropical hideaways offering infinity pools and direct lagoon access.",
+                season: "All Year",
+                flight: "11h",
+                rating: "4.9 / 5.0",
+                price: "$2,900"
+            },
+            10: {
+                title: "Bora Bora Lagoon Resort",
+                badge: "French Polynesia",
+                category: "beach",
+                image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
+                description: "Surrounded by a sand-fringed emerald lagoon and dramatic Mount Otemanu, Bora Bora is the ultimate romantic escape.",
+                season: "May - Oct",
+                flight: "14h 50m",
+                rating: "5.0 / 5.0",
+                price: "$4,100"
+            },
+            11: {
+                title: "Michelin & Holistic Wellness Spa",
+                badge: "Wellness",
+                category: "culture",
+                image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80",
+                description: "Rejuvenate your body and soul with organic farm-to-table dining, Ayurvedic treatments, and oceanfront yoga sessions.",
+                season: "All Year",
+                flight: "Varies",
+                rating: "4.8 / 5.0",
+                price: "$1,450"
+            },
+            12: {
+                title: "Amalfi Coast Cliffside Villas",
+                badge: "Italy",
+                category: "culture",
+                image: "https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1200&q=80",
+                description: "Pastel-colored villages cascading into the sparkling Tyrrhenian Sea. Enjoy fresh limoncello and private yacht coastal cruises.",
+                season: "May - Sep",
+                flight: "12h 45m",
+                rating: "4.9 / 5.0",
+                price: "$2,850"
+            }
+        };
+
+        // OPEN DETAIL MODAL
+        function openDetailModal(id) {
+            const data = destinationData[id] || destinationData[1];
+            document.getElementById('modalImage').style.backgroundImage = `url('${data.image}')`;
+            document.getElementById('modalBadge').innerText = data.badge;
+            document.getElementById('modalTitle').innerText = data.title;
+            document.getElementById('modalDescription').innerText = data.description;
+            document.getElementById('modalSeason').innerText = data.season;
+            document.getElementById('modalFlight').innerText = data.flight;
+            document.getElementById('modalRating').innerText = data.rating;
+            document.getElementById('modalPrice').innerText = data.price;
+            
+            document.getElementById('modalBookBtn').onclick = () => {
+                closeDetailModal();
+                openBookingModal(data.title);
+            };
+
+            const modal = document.getElementById('detailModal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function closeDetailModal() {
+            const modal = document.getElementById('detailModal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        // OPEN BOOKING MODAL
+        function openBookingModal(titleName) {
+            if (titleName) {
+                document.getElementById('bookingModalTitle').innerText = `Reserve: ${titleName}`;
+            }
+            const modal = document.getElementById('bookingModal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function closeBookingModal() {
+            const modal = document.getElementById('bookingModal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        function handleBookingSubmit(e) {
+            e.preventDefault();
+            closeBookingModal();
+            showToast('Booking inquiry submitted successfully! A concierge will reach out.');
+        }
+
+        // CATEGORY FILTER
+        function filterCategory(cat) {
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-brand-600', 'text-white');
+                btn.classList.add('bg-slate-800/80', 'text-slate-300');
+            });
+            event.target.classList.remove('bg-slate-800/80', 'text-slate-300');
+            event.target.classList.add('bg-brand-600', 'text-white');
+
+            const articles = document.querySelectorAll('article.card-item');
+            articles.forEach(art => {
+                const itemCat = art.getAttribute('data-category');
+                if (cat === 'all' || itemCat === cat || itemCat === 'all') {
+                    art.style.display = 'block';
+                } else {
+                    art.style.display = 'none';
+                }
+            });
+        }
+
+        // SEARCH MODAL LOGIC
+        function openSearchModal() {
+            const modal = document.getElementById('searchModal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            document.getElementById('searchInput').focus();
+        }
+
+        function closeSearchModal() {
+            const modal = document.getElementById('searchModal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        function handleSearch() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const resultsContainer = document.getElementById('searchResults');
+            resultsContainer.innerHTML = '';
+
+            if (query.trim() === '') return;
+
+            Object.keys(destinationData).forEach(key => {
+                const item = destinationData[key];
+                if (item.title.toLowerCase().includes(query) || item.description.toLowerCase().includes(query)) {
+                    const div = document.createElement('div');
+                    div.className = 'p-3 hover:bg-slate-800 rounded-xl cursor-pointer flex items-center justify-between text-xs transition-colors';
+                    div.onclick = () => {
+                        closeSearchModal();
+                        openDetailModal(key);
+                    };
+                    div.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <img src="${item.image}" class="w-10 h-10 rounded-lg object-cover">
+                            <div>
+                                <h5 class="text-white font-bold">${item.title}</h5>
+                                <span class="text-slate-400 text-[10px]">${item.badge}</span>
+                            </div>
+                        </div>
+                        <span class="text-brand-400 font-bold">${item.price}</span>
+                    `;
+                    resultsContainer.appendChild(div);
+                }
+            });
+        }
+
+        // TOAST NOTIFICATION
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3500);
+        }
+
+        function showBookmarkToast(e) {
+          if (e.key === 'Escape') {
+                closeDetailModal();
+                closeBookingModal();
+                closeSearchModal();
+            }
+        });
+    </script>
+</body>
+</html>
